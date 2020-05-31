@@ -8,10 +8,8 @@ function WeatherGrid () {
 
     return (
         <div className='weather-grid'>
-            <WeatherChart type='line' data={{count, dates, entries: forecast.temperatures}} />
-            <div>Dos</div>
-            <div>Tres</div>
-            <div>Cuatro</div>
+            <WeatherChart type='temperature' data={{count, dates, entries: forecast.temperatures}} reqId={forecast.reqId} />
+            <WeatherChart type='cloudiness' data={{count, dates, entries: forecast.clouds}} reqId={forecast.reqId} />
         </div>
     )
 }

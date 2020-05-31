@@ -30,11 +30,13 @@ function App () {
         }
 
         const storeData = {
+            reqId : Math.random(),
             count : data.cnt,
-            dates : data.list.map(x => x.dt),
+            dates : data.list.map(x => x.dt_txt),
             temperatures : data.list.map(x => x.main.temp),
-            weathers : data.list.map(x => x.weather[0].description)
+            clouds: data.list.map(x => x.clouds.all)
         }
+    
         dispatch(loadNewCity(storeData))
         setLoading(false)
     }

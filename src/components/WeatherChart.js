@@ -1,48 +1,85 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 import Chart from 'chart.js'
 
-function WeatherChart ({type, data}) {
+function WeatherChart ({type, data, reqId}) {
     const canvas = useRef()
+    const [chartInstance, setChartInstance] = useState(null)
 
-    useEffect(() => {
-        const ctx = canvas.current.getContext('2d')
-        const myChart = new Chart(ctx, {
-            type: 'bar',
+    const getChartConfig = () => {
+        let chartLabel, chartType, chartColor, chartTitle
+        switch (type) {
+            case 'temperature':
+                chartLabel = 'Avg. Temperature'
+                chartType = 'line'
+                chartColor = 'rgba(255, 99, 132, 0.8)'
+                chartTitle = 'Temperature'
+                break
+            
+                case 'cloudiness':
+                chartLabel = '% Cloudiness'
+                chartType = 'bar'
+                chartColor = 'rgba(59, 132, 255, 0.8)'
+                chartTitle = 'Clouds'
+                break
+        }
+
+        return {
+            type: chartType,
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: data.dates,
                 datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
+                    label: chartLabel,
+                    data: data.entries,
+                    backgroundColor: chartColor,
+                    borderColor: chartColor,
+                    borderWidth: 1,
+                    fill: false
                 }]
             },
             options: {
+                title: {
+                    display: true,
+                    text: chartTitle
+                },
                 scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                            displayFormats: {
+                                hour: "M/DD - hA"
+                            },
+                            tooltipFormat: "MMM. DD @ hA"
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Date/Time"
+                        }
+                    }],
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: false
                         }
                     }]
                 }
             }
-        })
-    })
+        }
+    }
+    
+    useEffect(() => {
+        const ctx = canvas.current.getContext('2d')
+        const newChart = new Chart(ctx, getChartConfig())
+        setChartInstance(newChart)
+
+    }, [canvas])
+
+    useEffect(() => { 
+        if (chartInstance) { console.log('update', chartInstance)
+            chartInstance.data.labels = data.dates
+            chartInstance.data.datasets[0].data = data.entries
+            chartInstance.update()
+        }
+    }, [reqId])
 
     return (
         <div className='weather-chart'>

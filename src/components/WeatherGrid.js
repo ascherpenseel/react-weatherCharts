@@ -1,5 +1,8 @@
 import React from 'react'
-import WeatherChart from './WeatherChart'
+import TemperatureChart from './TemperatureChart'
+import CloudsChart from './CloudsChart'
+import SkyChart from './SkyChart'
+import WindChart from './WindChart'
 import {useSelector} from 'react-redux'
 
 function WeatherGrid () {
@@ -8,8 +11,10 @@ function WeatherGrid () {
 
     return (
         <div className='weather-grid'>
-            <WeatherChart type='temperature' data={{count, dates, entries: forecast.temperatures}} reqId={forecast.reqId} />
-            <WeatherChart type='cloudiness' data={{count, dates, entries: forecast.clouds}} reqId={forecast.reqId} />
+            <TemperatureChart data={{dates, entries: forecast.temperatures}} city={forecast.city} />
+            <CloudsChart data={{dates, entries: forecast.clouds}} city={forecast.city} />
+            <SkyChart data={{entries: forecast.weathers}} city={forecast.city} />
+            <WindChart data={{entries: forecast.winds}} city={forecast.city} />
         </div>
     )
 }

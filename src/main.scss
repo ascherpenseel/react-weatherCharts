@@ -8,8 +8,8 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     grid-gap: 15px;
 
-    div {
-        min-height: 50px;
+    .weather-chart {
+        padding: 10px;
         border: 1px solid black;
     }
 }

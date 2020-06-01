@@ -11,8 +11,8 @@ function App () {
     const [error, setError] = useState('')
     const dispatch = useDispatch()
     const forecastLoaded = useSelector(forecast => !!forecast)
-    const cityInfo = useSelector(forecast => !!forecast ? forecast.cityInfo : {})
-console.log(cityInfo)
+    const cityInfo = useSelector(forecast => !!forecast ? forecast.cityInfo : null)
+
     useEffect(() => {
         if (city.length > 0) {
             setLoading(true)
@@ -56,9 +56,11 @@ console.log(cityInfo)
                     }
                 </div>
                 <div className={`city-info ${forecastLoaded ? '' : 'collapsed'}`}>
-                    <p className='city-name'>{cityInfo.name}, {cityInfo.country}</p>
-                    <div className='city-detail'>Sunrise: {new Date((cityInfo.sunrise || 0) * 1000).toISOString().substr(11, 8)}</div>
-                    <div className='city-detail'>Sunset: {new Date((cityInfo.sunset || 0) * 1000).toISOString().substr(11, 8)}</div>
+                    {!!cityInfo ? <>
+                        <p className='city-name'>{cityInfo.name}, {cityInfo.country}</p>
+                        <div className='city-detail'>Sunrise: {new Date((cityInfo.sunrise + cityInfo.timezone) * 1000).toISOString().substr(11, 8)}</div>
+                        <div className='city-detail'>Sunset: {new Date((cityInfo.sunset + cityInfo.timezone) * 1000).toISOString().substr(11, 8)}</div>
+                    </> : ''}
                 </div>
             </div>
             

@@ -10,4 +10,4 @@ export const APP_TEXTS = {
     search_label: 'Type in the city of your choosing',
     search_btn: 'Go!',
     error_api_404: 'City cannot be found'
-} 
+}

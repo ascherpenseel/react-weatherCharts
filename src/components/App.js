@@ -11,7 +11,8 @@ function App () {
     const [error, setError] = useState('')
     const dispatch = useDispatch()
     const forecastLoaded = useSelector(forecast => !!forecast)
-
+    const cityInfo = useSelector(forecast => !!forecast ? forecast.cityInfo : {})
+console.log(cityInfo)
     useEffect(() => {
         if (city.length > 0) {
             setLoading(true)
@@ -31,6 +32,7 @@ function App () {
 
         const storeData = {
             city,
+            cityInfo : data.city,
             count : data.cnt,
             dates : data.list.map(x => x.dt_txt),
             temperatures : data.list.map(x => x.main.temp),
@@ -45,13 +47,27 @@ function App () {
 
     return (
         <>
-            <h1>{APP_TEXTS.title}</h1>
-            <CitySearch setCity={setCity} />
+            <h1 className={`page-title ${forecastLoaded ? 'shrink' : ''}`}>{APP_TEXTS.title}</h1>
+            <div className='city-area'>
+                <div className='search-area'>
+                    <CitySearch setCity={setCity} />
+                    { error.length > 0 && 
+                        <div className='error'>{error}</div> 
+                    }
+                </div>
+                <div className={`city-info ${forecastLoaded ? '' : 'collapsed'}`}>
+                    <p className='city-name'>{cityInfo.name}, {cityInfo.country}</p>
+                    <div className='city-detail'>Sunrise: {new Date((cityInfo.sunrise || 0) * 1000).toISOString().substr(11, 8)}</div>
+                    <div className='city-detail'>Sunset: {new Date((cityInfo.sunset || 0) * 1000).toISOString().substr(11, 8)}</div>
+                </div>
+            </div>
+            
+            { (!forecastLoaded && loading) && 
+                <div className='loading'>Loading</div> 
+            }
             { forecastLoaded && 
                 <WeatherGrid /> 
             }
-            { (!forecastLoaded && loading) && <div className='loading'>Loading ...</div> }
-            { error.length > 0 && <div className='error'>{error}</div> }
         </>
 
     )

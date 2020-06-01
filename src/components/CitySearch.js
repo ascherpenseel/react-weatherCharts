@@ -14,7 +14,7 @@ function CitySearch ({setCity}) {
 
     return (
         <div className='search-container'>
-            <h4>{APP_TEXTS.search_label}</h4>
+            <p className='search_caption'>{APP_TEXTS.search_label}</p>
             <input type='search' value={text} onChange={handleChange} onKeyDown={handleKeyDown} />
             <button onClick={() => setCity(text)}>{APP_TEXTS.search_btn}</button>
         </div>
